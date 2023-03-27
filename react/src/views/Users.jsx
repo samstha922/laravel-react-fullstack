@@ -2,17 +2,12 @@ import {useEffect, useState} from "react";
 import axiosClient from "../axios-client.js";
 import {Link} from "react-router-dom";
 import {useStateContext} from "../context/ContextProvider.jsx";
-import {Pagination} from 'react-laravel-paginex';
-
-// import Pagination from 'react-bootstrap/Pagination';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.min.js';
 
 export default function Users() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const {setNotification} = useStateContext()
-  
+
   useEffect(() => {
     getUsers();
   }, [])
@@ -23,33 +18,22 @@ export default function Users() {
     }
     axiosClient.delete(`/users/${user.id}`)
       .then(() => {
-        setNotification("User was successfully deleted.")
+        setNotification('User was successfully deleted')
         getUsers()
       })
   }
 
-  const getUsers=(data={page:1})=>{
+  const getUsers = () => {
     setLoading(true)
-    axiosClient.get('users?page=' + data.page).then(response => {
-      console.log(response.data)
-      setLoading(false)
-      setUsers(response.data.data)
-      // this.setState(response.data);
-    });
-}
-
-  // const getUsers = () => {
-  //   setLoading(true)
-  //   axiosClient.get('/users')
-  //     .then(({ data }) => {
-  //       console.log(data)
-  //       setLoading(false)
-  //       setUsers(data.data)
-  //     })
-  //     .catch(() => {
-  //       setLoading(false)
-  //     })
-  // }
+    axiosClient.get('/users')
+      .then(({ data }) => {
+        setLoading(false)
+        setUsers(data.data)
+      })
+      .catch(() => {
+        setLoading(false)
+      })
+  }
 
   return (
     <div>
@@ -95,23 +79,6 @@ export default function Users() {
             </tbody>
           }
         </table>
-        {console.log('.....',getUsers.data)}
-        {!loading &&
-        
-        <Pagination changePage={getUsers} data={getUsers.data}/>
-      }
-        {/* <Pagination>
-          <Pagination.First />{ console.log(users) }
-          <Pagination.Prev />
-          <Pagination.Item active >{1}</Pagination.Item>
-          <Pagination.Item>{2}</Pagination.Item>
-          <Pagination.Item>{3}</Pagination.Item>
-          <Pagination.Item>{4}</Pagination.Item>
-          <Pagination.Next />
-          <Pagination.Last />
-        </Pagination> */}
-        
-
       </div>
     </div>
   )
