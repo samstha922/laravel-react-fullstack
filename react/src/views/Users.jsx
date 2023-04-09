@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import axiosClient from "../axios-client.js";
 import {Link} from "react-router-dom";
 import {useStateContext} from "../context/ContextProvider.jsx";
+import {Pagination} from 'react-laravel-paginex';
 
 export default function Users() {
   const [users, setUsers] = useState([]);
@@ -9,7 +10,7 @@ export default function Users() {
   const {setNotification} = useStateContext()
 
   useEffect(() => {
-    getUsers();
+    // getUsers();
   }, [])
 
   const onDeleteClick = user => {
@@ -19,21 +20,32 @@ export default function Users() {
     axiosClient.delete(`/users/${user.id}`)
       .then(() => {
         setNotification('User was successfully deleted')
-        getUsers()
+        // getUsers()
       })
   }
 
-  const getUsers = () => {
-    setLoading(true)
-    axiosClient.get('/users')
-      .then(({ data }) => {
-        setLoading(false)
-        setUsers(data.data)
-      })
-      .catch(() => {
-        setLoading(false)
-      })
-  }
+  // const getUsers = (data) => {
+  //     setLoading(true)
+  //     // axiosClient.get('/users')
+  //     axiosClient.get('/users?page=' + data.page)
+  //       .then((response) => {
+  //         console.log('data......',response.data)
+  //         // return response.data
+  //         setLoading(false)
+  //         setUsers(response.data.data)
+  //         return {...response.data.links,...response.data.meta}
+  //       })
+  //       .catch(() => {
+  //         setLoading(false)
+  //       })
+  // }
+  const getData=(data)=>{
+    console.log('data...',data)
+    axios.get('/users?page=' + 1).then(response => {
+        this.setState({data:data});
+    });
+}
+
 
   return (
     <div>
@@ -63,6 +75,7 @@ export default function Users() {
           }
           {!loading &&
             <tbody>
+              {/* {typeof {users}} */}
             {users.map(u => (
               <tr key={u.id}>
                 <td>{u.id}</td>
@@ -79,6 +92,7 @@ export default function Users() {
             </tbody>
           }
         </table>
+        <Pagination changePage={getData} data={{users}}/>
       </div>
     </div>
   )

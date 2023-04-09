@@ -25,11 +25,12 @@ class UpdateUserRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email'.$this->id,
+            'country' => 'string',
             'password' => [
                 'confirmed',
-                Password::min(8)
-                ->letters()
-                ->symbols()
+                // Password::min(8)
+                // ->letters()
+                // ->symbols()
             ]
         ];
     }

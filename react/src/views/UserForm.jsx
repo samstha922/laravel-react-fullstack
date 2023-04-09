@@ -46,6 +46,7 @@ export default function UserForm() {
       axiosClient.get(`/users/${id}`)
         .then(({data}) => {
           setLoading(false)
+          console.log('data.....',data)
           setUser(data)
         })
         .catch(() => {
@@ -55,13 +56,12 @@ export default function UserForm() {
   }
 
   const onSubmit = ev => {
-    console.log(user);
+    console.log('onSubmitCall',user);
     ev.preventDefault()
     if (user.id) {
       axiosClient.put(`/users/${user.id}`, user)
         .then(() => {
           setNotification('User was successfully updated')
-          navigate('/users')
         })
         .catch(err => {
           const response = err.response;
@@ -105,7 +105,8 @@ export default function UserForm() {
           <form onSubmit={onSubmit}>
             <input value={user.name} onChange={ev => setUser({...user, name: ev.target.value})} placeholder="Name"/>
             <input value={user.email} onChange={ev => setUser({...user, email: ev.target.value})} placeholder="Email"/>
-            <select className="select" value={user.country} onChange={ev => setUser({...user, country: ev.target.value})}>
+            <select name = 'selectedCountry' className="select" value={user.country} onChange={ev => setUser({...user, country: ev.target.value})}>
+            <option value="" disabled>Select your option</option>
               {countryOptions.map((option, i) => (
                 <option key={i} value={option.value}>{option.label}</option>
               ))}
