@@ -55,7 +55,6 @@ export default function UserForm() {
   }
 
   const onSubmit = ev => {
-    console.log(user);
     ev.preventDefault()
     if (user.id) {
       axiosClient.put(`/users/${user.id}`, user)
@@ -106,10 +105,23 @@ export default function UserForm() {
             <input value={user.name} onChange={ev => setUser({...user, name: ev.target.value})} placeholder="Name"/>
             <input value={user.email} onChange={ev => setUser({...user, email: ev.target.value})} placeholder="Email"/>
             <select className="select" value={user.country} onChange={ev => setUser({...user, country: ev.target.value})}>
+              <option value="" disabled>Select your option</option>
               {countryOptions.map((option, i) => (
                 <option key={i} value={option.value}>{option.label}</option>
               ))}
             </select>
+            <div className="gender">
+              <h3>Select Gender</h3>
+
+              <input type="radio" name="gender" value="male" id="male" checked={gender === "male"} onChange={ev => setUser({...user, gender: ev.target.value})}/>
+              <label htmlFor="male">Male</label>
+
+              <input type="radio" name="gender" value="female" id="female" checked={gender === "female"} onChange={ev => setUser({...user, gender: ev.target.value})}/>
+              <label htmlFor="female">Female</label>
+
+              <input type="radio" name="gender" value="Other" id="other" checked={gender === "other"} onChange={ev => setUser({...user, gender: ev.target.value})}/>
+              <label htmlFor="other">Other</label>
+            </div>
             <input type="password" onChange={ev => setUser({...user, password: ev.target.value})} placeholder="Password"/>
             <input type="password" onChange={ev => setUser({...user, password_confirmation: ev.target.value})} placeholder="Password Confirmation"/>
             <button className="btn">Save</button>
