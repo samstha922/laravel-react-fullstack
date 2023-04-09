@@ -113,13 +113,13 @@ export default function UserForm() {
             <div className="gender">
               <h3>Select Gender</h3>
 
-              <input type="radio" name="gender" value="male" id="male" checked={gender === "male"} onChange={ev => setUser({...user, gender: ev.target.value})}/>
+              <input type="radio" name="gender" value="male" id="male" onChange={ev => setUser({...user, gender: ev.target.value})}/>
               <label htmlFor="male">Male</label>
 
-              <input type="radio" name="gender" value="female" id="female" checked={gender === "female"} onChange={ev => setUser({...user, gender: ev.target.value})}/>
+              <input type="radio" name="gender" value="female" id="female" onChange={ev => setUser({...user, gender: ev.target.value})}/>
               <label htmlFor="female">Female</label>
 
-              <input type="radio" name="gender" value="Other" id="other" checked={gender === "other"} onChange={ev => setUser({...user, gender: ev.target.value})}/>
+              <input type="radio" name="gender" value="Other" id="other" onChange={ev => setUser({...user, gender: ev.target.value})}/>
               <label htmlFor="other">Other</label>
             </div>
             <input type="password" onChange={ev => setUser({...user, password: ev.target.value})} placeholder="Password"/>
