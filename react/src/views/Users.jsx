@@ -3,14 +3,19 @@ import axiosClient from "../axios-client.js";
 import {Link} from "react-router-dom";
 import {useStateContext} from "../context/ContextProvider.jsx";
 import {Pagination} from 'react-laravel-paginex';
+import styled  from 'styled-components';
 
 export default function Users() {
   const [users, setUsers] = useState([]);
+  const [pagination, setPagination] = useState({});
   const [loading, setLoading] = useState(false);
   const {setNotification} = useStateContext()
 
+  const PaginationWrapper = styled.div `
+    display: flex;
+  `
   useEffect(() => {
-    // getUsers();
+    getUsers();
   }, [])
 
   const onDeleteClick = user => {
@@ -20,33 +25,29 @@ export default function Users() {
     axiosClient.delete(`/users/${user.id}`)
       .then(() => {
         setNotification('User was successfully deleted')
-        // getUsers()
+        getUsers()
       })
   }
 
-  // const getUsers = (data) => {
-  //     setLoading(true)
-  //     // axiosClient.get('/users')
-  //     axiosClient.get('/users?page=' + data.page)
-  //       .then((response) => {
-  //         console.log('data......',response.data)
-  //         // return response.data
-  //         setLoading(false)
-  //         setUsers(response.data.data)
-  //         return {...response.data.links,...response.data.meta}
-  //       })
-  //       .catch(() => {
-  //         setLoading(false)
-  //       })
-  // }
-  const getData=(data)=>{
-    console.log('data...',data)
-    axios.get('/users?page=' + 1).then(response => {
-        this.setState({data:data});
-    });
-}
-
-
+  const getUsers = (data= {}) => {
+    const page = data?.page || 1
+    setLoading(true)
+    axiosClient.get('/users?page=' + page )
+    .then((response) => {
+          setUsers(response.data.data)
+          setPagination({
+            current_page: response.data?.meta.current_page,
+            last_page: response.data?.meta.last_page,
+            total: response.data?.meta.total,
+            next_page_url: response.data?.links?.next,
+            prev_page_url: response.data?.links?.previous 
+          })
+          setLoading(false)
+        })
+        .catch(() => {
+          setLoading(false)
+        })
+  }
   return (
     <div>
       <div style={{display: 'flex', justifyContent: "space-between", alignItems: "center"}}>
@@ -89,10 +90,12 @@ export default function Users() {
                 </td>
               </tr>
             ))}
+            <PaginationWrapper>
+              {users.length > 0 && <Pagination changePage={getUsers} data={pagination} />}
+            </PaginationWrapper>
             </tbody>
           }
         </table>
-        <Pagination changePage={getData} data={{users}}/>
       </div>
     </div>
   )
